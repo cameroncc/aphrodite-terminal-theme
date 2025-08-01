@@ -34,9 +34,13 @@ aphrodite_get_prompt() {
 	local git_branch
 	git_branch=$(git --no-optional-locks rev-parse --abbrev-ref HEAD 2> /dev/null)
 	if [[ -n "$git_branch" ]]; then
-		local git_status
-		git_status=$(git --no-optional-locks status --porcelain 2> /dev/null | tail -n 1)
-		[[ -n "$git_status" ]] && echo -n "%F{11}" || echo -n "%F{10}"
+		if (( ${+APHRODITE_THEME_DISABLE_GIT_STATUS} )); then
+			echo -n "%F{166}"
+		else
+			local git_status
+			git_status=$(git --no-optional-locks status --porcelain 2> /dev/null | tail -n 1)
+			[[ -n "$git_status" ]] && echo -n "%F{11}" || echo -n "%F{10}"
+		fi
 		echo -n "‹${git_branch}›%f"
 	fi
 
