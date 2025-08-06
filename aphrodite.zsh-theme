@@ -54,4 +54,7 @@ aphrodite_get_prompt() {
 	echo -n "%(!.#.$)%f "  # if is_root_user ? # : $
 }
 
+return_code="%(?..%{$fg_bold[red]%}:( %?%{$reset_color%})"
+RPS1='${return_code} %D - %*'
+
 export PROMPT='$(aphrodite_get_prompt)'
