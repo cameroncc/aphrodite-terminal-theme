@@ -54,7 +54,19 @@ aphrodite_get_prompt() {
 	echo -n "%(!.#.$)%f "  # if is_root_user ? # : $
 }
 
-return_code="%(?..%{$fg_bold[red]%}:( %?%{$reset_color%})"
-RPS1='${return_code} %D - %*'
+aphrodite_get_simple_right_side_prompt() {
+  local return_code
+  return_code="%(?..%{$fg_bold[red]%}:( %?%{$reset_color%})"
+  echo -n "${return_code}"
+}
+
+aphrodite_get_right_side_prompt() {
+  echo -n "$(aphrodite_get_simple_right_side_prompt) %D - %*"
+}
 
 export PROMPT='$(aphrodite_get_prompt)'
+if (( ${+APHRODITE_THEME_SIMPLE_RIGHT_PROMPT} )); then
+  export RPS1='$(aphrodite_get_simple_right_side_prompt)'
+else
+  export RPS1='$(aphrodite_get_right_side_prompt)'
+fi
