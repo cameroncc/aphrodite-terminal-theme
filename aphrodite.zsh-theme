@@ -34,7 +34,23 @@ aphrodite_get_prompt() {
 	local git_branch
 	git_branch=$(git --no-optional-locks rev-parse --abbrev-ref HEAD 2> /dev/null)
 	if [[ -n "$git_branch" ]]; then
+		local should_disable_git_status=0
+
 		if (( ${+APHRODITE_THEME_DISABLE_GIT_STATUS} )); then
+			should_disable_git_status=1
+		elif (( ${+APHRODITE_THEME_GIT_STATUS_BLACKLIST} )); then
+			local repo_name
+			repo_name=$(basename "$(git --no-optional-locks remote get-url origin 2>/dev/null)" .git)
+			if [[ -n "$repo_name" ]]; then
+				local -a blacklist
+				blacklist=("${(@s/:/)APHRODITE_THEME_GIT_STATUS_BLACKLIST}")
+				if (( ${blacklist[(Ie)$repo_name]} )); then
+					should_disable_git_status=1
+				fi
+			fi
+		fi
+
+		if (( should_disable_git_status )); then
 			echo -n "%F{166}"
 		else
 			local git_status
