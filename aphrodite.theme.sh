@@ -22,7 +22,7 @@ __aphrodite_update_prompt_data() {
 	local RETVAL=$?
 
 	__aphrodite_venv=''
-	[[ -n "$VIRTUAL_ENV" ]] && __aphrodite_venv=$(basename "$VIRTUAL_ENV")
+	[[ -n "$VIRTUAL_ENV" ]] && __aphrodite_venv="[$(basename "$VIRTUAL_ENV")] "
 
 	__aphrodite_git=''
 	__aphrodite_git_color=$(tput setaf 10)  # clean
@@ -41,7 +41,7 @@ __aphrodite_update_prompt_data() {
 }
 
 
-if [[ -n "$git_branch" ]]; then
+if [[ -n "$PROMPT_COMMAND" ]]; then
 	PROMPT_COMMAND="$PROMPT_COMMAND; __aphrodite_update_prompt_data"
 else
 	PROMPT_COMMAND="__aphrodite_update_prompt_data"
@@ -49,7 +49,7 @@ fi
 
 
 PS1=''
-PS1+='\[$(tput setaf 7)\]$(echo -ne $__aphrodite_venv)\[$(tput sgr0)\]'
+PS1+='\[$(tput setaf 7)\]$(echo -ne "$__aphrodite_venv")\[$(tput sgr0)\]'
 PS1+='\[$(tput setaf 6)\]\u'
 PS1+='\[$(tput setaf 8)\]@'
 PS1+='\[$(tput setaf 12)\]\h'
